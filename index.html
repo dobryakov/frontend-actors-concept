@@ -48,12 +48,33 @@ myApp.addRegions({
   anotherRegion: "#another-div"
 });
 
-myApp.vent.on("minutePassed", function(someData){
+var globalCh = Backbone.Wreqr.radio.channel('appChannel');
+
+globalCh.vent.on("minutePassed", function(someData){
   console.log("Received ", someData);
 });
 
+//window.setInterval(function() {
+//  globalCh.vent.trigger("minutePassed", 'message ' + new Date() + '.');
+//}, 1000 * 5);
+
+var timeModel = Backbone.Model.extend({
+  defaults: {
+    value: 0
+  },
+  initialize: function() {
+    
+  },
+});
+
+var timeEntity = new timeModel;
+
+globalCh.vent.on("timeEntity:setValue", function(value){
+  timeEntity.set({value: value});
+});
+
 window.setInterval(function() {
-  myApp.vent.trigger("minutePassed", 'message ' + new Date());
+  globalCh.vent.trigger("timeEntity:setValue", new Date());
 }, 1000 * 5);
 
 </script>
@@ -61,6 +82,8 @@ window.setInterval(function() {
 <div id="app"></div>
 <div id="some-div"></div>
 <div id="another-div"></div>
+
+<div id="time"></div>
 
 </body>
 </html>
