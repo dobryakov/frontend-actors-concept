@@ -11,6 +11,8 @@
 
 <script type="text/javascript">
 
+var globalCh = Backbone.Wreqr.radio.channel('appChannel');
+
 jQuery(document).ready(function() {
 
 var MyApp = Marionette.Application.extend({
@@ -50,15 +52,11 @@ myApp.addRegions({
   anotherRegion: "#another-div"
 });
 
-var globalCh = Backbone.Wreqr.radio.channel('appChannel');
-
 globalCh.vent.on("minutePassed", function(someData){
   console.log("Received ", someData);
 });
 
-//window.setInterval(function() {
-//  globalCh.vent.trigger("minutePassed", 'message ' + new Date() + '.');
-//}, 1000 * 5);
+// time field
 
 var timeModel = Backbone.Model.extend({
   defaults: {
@@ -71,14 +69,6 @@ var timeModel = Backbone.Model.extend({
 
 var timeEntity = new timeModel;
 
-globalCh.vent.on("timeEntity:setValue", function(value){
-  timeEntity.set({value: value});
-});
-
-window.setInterval(function() {
-  globalCh.vent.trigger("timeEntity:setValue", new Date());
-}, 1000 * 2);
-
 var timeView = Backbone.View.extend({
  
   initialize: function() {
@@ -87,6 +77,7 @@ var timeView = Backbone.View.extend({
 
   render: function() {
     this.$el.html(this.model.get('value'));
+    return this;
   }
 
 });
@@ -96,6 +87,51 @@ var timeEntityView = new timeView({
   el: $('#time')
 });
 
+// input type text
+
+var inputModel = Backbone.Model.extend({
+  defaults: {
+    value: ''
+  },
+  initialize: function() {
+    
+  },
+});
+
+var inputEntity = new inputModel;
+
+var inputView = Backbone.View.extend({
+ 
+  initialize: function() {
+    this.listenTo(this.model, "change", this.render);
+  },
+
+  render: function() {
+    this.$el.val(this.model.get('value'));
+    return this;
+  }
+
+});
+
+var inputEntityView = new inputView({
+  model: inputEntity,
+  el: $('#username')
+});
+
+// subscribe
+
+globalCh.vent.on("timeEntity:setValue", function(value){
+  timeEntity.set({value: value});
+});
+
+globalCh.vent.on("inputEntity:setValue", function(value){
+  inputEntity.set({value: value});
+});
+
+window.setInterval(function() {
+  globalCh.vent.trigger("timeEntity:setValue", new Date());
+}, 1000 * 2);
+
 });
 
 </script>
@@ -104,7 +140,9 @@ var timeEntityView = new timeView({
 <div id="some-div"></div>
 <div id="another-div"></div>
 
-<div id="time"></div>
+<div id="time">Here will be timer...</div>
+
+<div id="userform"><input type="text" id="username" placeholder="Enter something here..."></div>
 
 </body>
 </html>
