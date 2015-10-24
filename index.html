@@ -106,9 +106,17 @@ var inputView = Backbone.View.extend({
     this.listenTo(this.model, "change", this.render);
   },
 
+  events: {
+    'keyup': 'update'
+  },
+
   render: function() {
     this.$el.val(this.model.get('value'));
     return this;
+  },
+ 
+  update: function(event) {
+    this.model.set('value', $(event.target).val());
   }
 
 });
@@ -142,7 +150,7 @@ window.setInterval(function() {
 
 <div id="time">Here will be timer...</div>
 
-<div id="userform"><input type="text" id="username" placeholder="Enter something here..."></div>
+<div id="userform"><input type="text" id="username" placeholder="Enter something here..." autocomplete="off"></div>
 
 </body>
 </html>
