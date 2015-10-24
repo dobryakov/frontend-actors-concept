@@ -77,6 +77,22 @@ window.setInterval(function() {
   globalCh.vent.trigger("timeEntity:setValue", new Date());
 }, 1000 * 5);
 
+var timeView = Backbone.View.extend({
+
+  initialize: function() {
+    this.listenTo(this.model, "change", this.render);
+  },
+
+  render: function() {
+    $('#time').html(this.model.get('value'));
+  }
+
+});
+
+var timeEntityView = new timeView({
+  model: timeEntity
+});
+
 </script>
 
 <div id="app"></div>
