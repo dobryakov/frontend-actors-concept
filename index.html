@@ -95,10 +95,14 @@ var inputModel = Backbone.Model.extend({
   },
   initialize: function() {
     
-  },
+  }
 });
 
 var inputEntity = new inputModel;
+
+inputEntity.on('change:value', function(model) {
+  globalCh.vent.trigger("inputEntity:valueChanged", model.get('value'));
+});
 
 var inputView = Backbone.View.extend({
  
@@ -117,6 +121,7 @@ var inputView = Backbone.View.extend({
  
   update: function(event) {
     this.model.set('value', $(event.target).val());
+    console.log(this.model.attributes);
   }
 
 });
@@ -134,6 +139,10 @@ globalCh.vent.on("timeEntity:setValue", function(value){
 
 globalCh.vent.on("inputEntity:setValue", function(value){
   inputEntity.set({value: value});
+});
+
+globalCh.vent.on("inputEntity:valueChanged", function(value){
+  console.log("new value " + value);
 });
 
 window.setInterval(function() {
