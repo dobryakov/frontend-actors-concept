@@ -101,7 +101,7 @@ var inputModel = Backbone.Model.extend({
 var inputEntity = new inputModel;
 
 inputEntity.on('change:value', function(model) {
-  globalCh.vent.trigger("inputEntity:valueChanged", model.get('value'));
+  globalCh.vent.trigger("inputEntity:valueChanged", model.attributes);
 });
 
 var inputView = Backbone.View.extend({
@@ -121,7 +121,7 @@ var inputView = Backbone.View.extend({
  
   update: function(event) {
     this.model.set('value', $(event.target).val());
-    console.log(this.model.attributes);
+    //console.log(this.model.attributes);
   }
 
 });
@@ -142,7 +142,7 @@ globalCh.vent.on("inputEntity:setValue", function(value){
 });
 
 globalCh.vent.on("inputEntity:valueChanged", function(value){
-  console.log("new value " + value);
+  console.log("new value ", value);
 });
 
 window.setInterval(function() {
@@ -159,7 +159,7 @@ window.setInterval(function() {
 
 <div id="time">Here will be timer...</div>
 
-<div id="userform"><input type="text" id="username" placeholder="Enter something here..." autocomplete="off"></div>
+<div id="userform"><input type="text" id="username" placeholder="Enter something here..." autocomplete="off"><br>(open firebug console to see events)</div>
 
 </body>
 </html>
