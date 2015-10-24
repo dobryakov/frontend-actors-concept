@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru-RU">
+<head>
+<script type="text/javascript" src="m/underscore.js"></script>
+<script type="text/javascript" src="m/jquery.js"></script>
+<script type="text/javascript" src="m/backbone.js"></script>
+<script type="text/javascript" src="m/backbone.marionette.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var MyApp = Marionette.Application.extend({
+  initialize: function(options) {
+    console.log(options.container);
+  }
+});
+
+var myApp = new MyApp({container: '#app'});
+
+myApp.on("before:start", function(options){
+  options.moreData = "Yo dawg, I heard you like options so I put some options in your options!"
+});
+
+myApp.on("start", function(options){
+  if (Backbone.history){
+    Backbone.history.start();
+  }
+});
+
+var options = {
+  something: "some value",
+  another: "#some-selector"
+};
+
+myApp.start(options);
+
+</script>
+
+<div id="app"></div>
+
+</body>
+</html>
