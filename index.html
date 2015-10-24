@@ -5,6 +5,7 @@
 <script type="text/javascript" src="m/jquery.js"></script>
 <script type="text/javascript" src="m/backbone.js"></script>
 <script type="text/javascript" src="m/backbone.marionette.js"></script>
+<script type="text/javascript" src="m/backbone.wreqr.js"></script>
 </head>
 <body>
 
@@ -30,14 +31,36 @@ myApp.on("start", function(options){
 
 var options = {
   something: "some value",
-  another: "#some-selector"
+  another: "#some-selector",
+  channelName: 'appChannel'
 };
 
 myApp.start(options);
 
+var RootView = Marionette.LayoutView.extend({
+  el: 'body'
+});
+
+myApp.rootView = new RootView();
+
+myApp.addRegions({
+  someRegion: "#some-div",
+  anotherRegion: "#another-div"
+});
+
+myApp.vent.on("minutePassed", function(someData){
+  console.log("Received ", someData);
+});
+
+window.setInterval(function() {
+  myApp.vent.trigger("minutePassed", 'message ' + new Date());
+}, 1000 * 5);
+
 </script>
 
 <div id="app"></div>
+<div id="some-div"></div>
+<div id="another-div"></div>
 
 </body>
 </html>
